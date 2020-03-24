@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">WCI SantaMaria</string>
+    <string name="follow"><![CDATA[Follow us<br/>on <a href="http://twitter.com/umanoapp">Twitter</a>]]></string>
+    <string name="music_player">Music Player</string>
+    <string name="playback">Playback</string>
+
+    <string name="error_status">error status</string>
+
+</resources>

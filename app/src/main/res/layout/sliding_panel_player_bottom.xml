@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:playpauseview="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="125dp"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:alpha="0.05"
+        android:background="@drawable/wci_logo"
+        android:scaleType="centerCrop" />
+
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical">-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/img_previous"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/bar_selector_white"
+                android:padding="15dp"
+                android:src="@drawable/ic_skip_previous" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.axionteq.onlineradio.radio.radio.PlayPauseView
+                        android:id="@+id/btn_play"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:layout_centerInParent="true"
+                        android:clickable="true"
+                        android:src="@drawable/ic_play"
+                        android:stateListAnimator="@drawable/img_elevation"
+                        playpauseview:ignore="UnusedAttribute"
+                        playpauseview:isCircleDraw="true"
+                        android:focusable="true" />
+
+                    <ProgressBar
+                        android:id="@+id/pbPlayPause"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        style="?android:attr/progressBarStyle"
+                        android:progressTint="@color/colorWhite"
+                        android:progressBackgroundTint="@color/colorWhite"
+                        playpauseview:ignore="UnusedAttribute"
+                        android:progressDrawable="@color/colorWhite"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/pgPlayPauseLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:visibility="invisible"
+                    android:focusable="true">
+
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/img_next"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/bar_selector_white"
+                android:padding="15dp"
+                android:src="@drawable/ic_skip_next" />
+
+        </LinearLayout>
+<!--    </LinearLayout>-->
+</RelativeLayout>
