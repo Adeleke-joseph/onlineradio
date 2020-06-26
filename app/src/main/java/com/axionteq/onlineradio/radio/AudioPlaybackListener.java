@@ -1,5 +1,5 @@
 
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,14 +24,14 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
         OnCompletionListener, OnErrorListener, OnPreparedListener, OnSeekCompleteListener {
     private static final String TAG = Logger.makeLogTag(AudioPlaybackListener.class);
 
-    public static final float VOLUME_DUCK = 0.2f;
-    public static final float VOLUME_NORMAL = 1.0f;
+    private static final float VOLUME_DUCK = 0.2f;
+    private static final float VOLUME_NORMAL = 1.0f;
 
     private static final int AUDIO_NO_FOCUS_NO_DUCK = 0;
     private static final int AUDIO_NO_FOCUS_CAN_DUCK = 1;
     private static final int AUDIO_FOCUSED = 2;
 
-    Context mContext;
+    private Context mContext;
     private WifiManager.WifiLock mWifiLock;
 
     private int mState;
@@ -44,7 +44,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
     private AudioManager mAudioManager;
     private MediaPlayer mMediaPlayer;
 
-    public AudioPlaybackListener(Context context) {
+    AudioPlaybackListener(Context context) {
         this.mContext = context;
         this.mAudioManager = (AudioManager) context.getSystemService( Context.AUDIO_SERVICE);
         this.mWifiLock = ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "dmAudioStreaming_Lock");
@@ -115,7 +115,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
     }
 
     @Override
-    public void play(RadioType item) {
+    public void play(Radio item) {
         mPlayOnFocusGain = true;
         tryToGetAudioFocus();
         registerAudioNoisyReceiver();

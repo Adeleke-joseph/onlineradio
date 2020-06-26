@@ -1,5 +1,5 @@
 
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.app.Application;
 import android.content.Context;

@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="120dp"
     android:background="@color/md_blue_grey_900"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
     <RelativeLayout
         android:layout_width="120dp"
@@ -34,29 +35,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="44dp"
-            android:orientation="vertical"
-            android:layout_marginEnd="44dp">
+            android:layout_marginEnd="44dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/player_song_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="4dp"
                 android:gravity="top|left"
                 android:singleLine="true"
                 android:text=""
                 android:textColor="#ffffffff"
                 android:textSize="14sp"
-                android:layout_marginStart="12dp" />
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/player_author_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="1dp"
                 android:singleLine="true"
                 android:text=""
@@ -68,7 +67,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="1dp"
                 android:singleLine="true"
                 android:text=""
@@ -105,48 +103,48 @@
                 android:id="@+id/player_previous"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_alignParentStart="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
                 android:src="@drawable/ic_skip_previous"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true" />
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/player_pause"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
-                android:src="@drawable/ic_pause"
-                android:layout_centerHorizontal="true"/>
+                android:src="@drawable/ic_pause" />
 
             <ImageView
                 android:id="@+id/player_play"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
                 android:src="@drawable/ic_play"
-                android:visibility="gone"
-                android:layout_centerHorizontal="true"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/player_next"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/bar_selector_white"
                 android:scaleType="center"
                 android:src="@drawable/ic_skip_next"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true" />
+                android:visibility="gone" />
         </RelativeLayout>
     </FrameLayout>
 

@@ -3,7 +3,7 @@
  * You should have received a copy of the license in this archive (see LICENSE).
  * Copyright @Dibakar_Mistry, 2015.
  */
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.util.Log;
 import android.util.SparseArray;
@@ -13,26 +13,26 @@ import java.util.ArrayList;
 
 public class NotificationManager {
 
-    public static boolean DEBUG_VERSION = false;
+    private static boolean DEBUG_VERSION = false;
     private static int totalEvents = 1;
     public static final int didReceivedNewMessages = totalEvents++;
     public static final int updateInterfaces = totalEvents++;
-    public static final int audioProgressDidChanged = totalEvents++;
+    static final int audioProgressDidChanged = totalEvents++;
     public static final int audioDidReset = totalEvents++;
-    public static final int audioPlayStateChanged = totalEvents++;
+    static final int audioPlayStateChanged = totalEvents++;
 
     public static final int screenshotTook = totalEvents++;
     public static final int albumsDidLoaded = totalEvents++;
     public static final int audioDidSent = totalEvents++;
-    public static final int audioDidStarted = totalEvents++;
+    static final int audioDidStarted = totalEvents++;
     public static final int audioRouteChanged = totalEvents++;
     public static final int newaudioloaded = totalEvents++;
-    public static final int setAnyPendingIntent = totalEvents++;
+    static final int setAnyPendingIntent = totalEvents++;
 
-    private SparseArray<ArrayList<Object>> observers = new SparseArray<ArrayList<Object>>();
-    private SparseArray<ArrayList<Object>> removeAfterBroadcast = new SparseArray<ArrayList<Object>>();
-    private SparseArray<ArrayList<Object>> addAfterBroadcast = new SparseArray<ArrayList<Object>>();
-    private ArrayList<DelayedPost> delayedPosts = new ArrayList<DelayedPost>(10);
+    private SparseArray<ArrayList<Object>> observers = new SparseArray<>();
+    private SparseArray<ArrayList<Object>> removeAfterBroadcast = new SparseArray<>();
+    private SparseArray<ArrayList<Object>> addAfterBroadcast = new SparseArray<>();
+    private ArrayList<DelayedPost> delayedPosts = new ArrayList<>( 10 );
 
     private int broadcasting = 0;
     private boolean animationInProgress;
@@ -56,7 +56,7 @@ public class NotificationManager {
 
     private static volatile NotificationManager Instance = null;
 
-    public static NotificationManager getInstance() {
+    static NotificationManager getInstance() {
         NotificationManager localInstance = Instance;
         if (localInstance == null) {
             synchronized (NotificationManager.class) {
@@ -79,12 +79,12 @@ public class NotificationManager {
         }
     }
 
-    public void postNotificationName(int id, Object... args) {
+    void postNotificationName(int id, Object... args) {
         boolean allowDuringAnimation = false;
         postNotificationNameInternal(id, allowDuringAnimation, args);
     }
 
-    public void postNotificationNameInternal(int id, boolean allowDuringAnimation, Object... args) {
+    private void postNotificationNameInternal(int id, boolean allowDuringAnimation, Object... args) {
         if (DEBUG_VERSION) {
             if (Thread.currentThread() != AudioStreamingManager.applicationHandler.getLooper().getThread()) {
                 throw new RuntimeException("postNotificationName allowed only from MAIN thread");
@@ -131,7 +131,7 @@ public class NotificationManager {
         }
     }
 
-    public void addObserver(Object observer, int id) {
+    void addObserver(Object observer, int id) {
         if (DEBUG_VERSION) {
             if (Thread.currentThread() != AudioStreamingManager.applicationHandler.getLooper().getThread()) {
                 throw new RuntimeException("addObserver allowed only from MAIN thread");
@@ -140,7 +140,7 @@ public class NotificationManager {
         if (broadcasting != 0) {
             ArrayList<Object> arrayList = addAfterBroadcast.get(id);
             if (arrayList == null) {
-                arrayList = new ArrayList<Object>();
+                arrayList = new ArrayList<>();
                 addAfterBroadcast.put(id, arrayList);
             }
             arrayList.add(observer);
@@ -148,7 +148,7 @@ public class NotificationManager {
         }
         ArrayList<Object> objects = observers.get(id);
         if (objects == null) {
-            observers.put(id, (objects = new ArrayList<Object>()));
+            observers.put(id, (objects = new ArrayList<>()));
         }
         if (objects.contains(observer)) {
             return;
@@ -156,7 +156,7 @@ public class NotificationManager {
         objects.add(observer);
     }
 
-    public void removeObserver(Object observer, int id) {
+    void removeObserver(Object observer, int id) {
         if (DEBUG_VERSION) {
             if (Thread.currentThread() != AudioStreamingManager.applicationHandler.getLooper().getThread()) {
                 throw new RuntimeException("removeObserver allowed only from MAIN thread");
@@ -165,7 +165,7 @@ public class NotificationManager {
         if (broadcasting != 0) {
             ArrayList<Object> arrayList = removeAfterBroadcast.get(id);
             if (arrayList == null) {
-                arrayList = new ArrayList<Object>();
+                arrayList = new ArrayList<>();
                 removeAfterBroadcast.put(id, arrayList);
             }
             arrayList.add(observer);

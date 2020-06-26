@@ -3,7 +3,7 @@
  * You should have received a copy of the license in this archive (see LICENSE).
  * Copyright @Dibakar_Mistry(dibakar.ece@gmail.com), 2017.
  */
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -49,11 +49,11 @@ public class PlayPauseDrawable extends Drawable {
 	private float mProgress;
 	private boolean mIsPlay;
 
-	public void setmIsPlay(boolean mIsPlay) {
+	void setmIsPlay(boolean mIsPlay) {
 		this.mIsPlay = mIsPlay;
 	}
 
-	public PlayPauseDrawable(Context context) {
+	PlayPauseDrawable(Context context) {
 		final Resources res = context.getResources();
 		mPaint.setAntiAlias(true);
 		mPaint.setStyle( Paint.Style.FILL);
@@ -70,7 +70,6 @@ public class PlayPauseDrawable extends Drawable {
 		mPauseBarWidth = mWidth / 10;
 		mPauseBarHeight = mHeight * 0.30f;
 		mPauseBarDistance = mPauseBarWidth;
-
 	}
 
 	@Override
@@ -129,7 +128,7 @@ public class PlayPauseDrawable extends Drawable {
 		canvas.restore();
 	}
 
-	public Animator getPausePlayAnimator() {
+	Animator getPausePlayAnimator() {
 		final Animator anim = ObjectAnimator.ofFloat(this, PROGRESS, mIsPlay ? 1 : 0, mIsPlay ? 0 : 1);
 		anim.addListener(new AnimatorListenerAdapter() {
 			@Override

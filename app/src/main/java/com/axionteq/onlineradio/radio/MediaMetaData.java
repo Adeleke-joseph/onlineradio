@@ -1,11 +1,11 @@
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class MediaMetaData implements Parcelable {
 
-    protected MediaMetaData(Parcel in) {
+    private MediaMetaData(Parcel in) {
     }
 
     public static final Creator<MediaMetaData> CREATOR = new Creator<MediaMetaData>() {

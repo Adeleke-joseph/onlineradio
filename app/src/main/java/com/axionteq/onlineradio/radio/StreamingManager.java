@@ -1,10 +1,10 @@
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 
 
 public abstract class StreamingManager {
 
-    public abstract void onPlay(RadioType infoData);
+    public abstract void onPlay(Radio infoData);
 
     public abstract void onPause();
 

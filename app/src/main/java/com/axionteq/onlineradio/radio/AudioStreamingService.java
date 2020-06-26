@@ -3,7 +3,7 @@
  * You should have received a copy of the license in this archive (see LICENSE).
  * Copyright @Dibakar_Mistry(dibakar.ece@gmail.com), 2017.
  */
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -30,7 +30,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.axionteq.onlineradio.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
+import com.bumptech.glide.Glide;
 
 import java.util.Objects;
 
@@ -39,21 +39,21 @@ import java.util.Objects;
 public class AudioStreamingService extends Service implements NotificationManager.NotificationCenterDelegate {
     private static final String TAG = Logger.makeLogTag( AudioStreamingService.class);
 
-    public static final String EXTRA_CONNECTED_CAST = "co.obware.audiotest.musicTest.CAST_NAME";
-    public static final String ACTION_CMD = "co.obware.audiotest.musicTest.ACTION_CMD";
+    public static final String EXTRA_CONNECTED_CAST = "com.axionteq.onlineradio.musicTest.CAST_NAME";
+    public static final String ACTION_CMD = "com.axionteq.onlineradio.musicTest.ACTION_CMD";
     public static final String CMD_NAME = "CMD_NAME";
     public static final String CMD_PAUSE = "CMD_PAUSE";
     public static final String CMD_STOP_CASTING = "CMD_STOP_CASTING";
     private static final int STOP_DELAY = 30000;
 
-    public static final String NOTIFY_PREVIOUS = "co.obware.audiotest.musicTest.previous";
-    public static final String NOTIFY_CLOSE = "co.obware.audiotest.musicTest.close";
-    public static final String NOTIFY_PAUSE = "co.obware.audiotest.musicTest.pause";
-    public static final String NOTIFY_PLAY = "co.obware.audiotest.musicTest.play";
-    public static final String NOTIFY_NEXT = "co.obware.audiotest.musicTest.next";
+    public static final String NOTIFY_PREVIOUS = "com.axionteq.onlineradio.musicTest.previous";
+    public static final String NOTIFY_CLOSE = "com.axionteq.onlineradio.musicTest.close";
+    public static final String NOTIFY_PAUSE = "com.axionteq.onlineradio.musicTest.pause";
+    public static final String NOTIFY_PLAY = "com.axionteq.onlineradio.musicTest.play";
+    public static final String NOTIFY_NEXT = "com.axionteq.onlineradio.musicTest.next";
 
-    private static boolean supportBigNotifications = Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    private static boolean supportLockScreenControls = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
+    private static boolean supportBigNotifications = true;
+    private static boolean supportLockScreenControls = true;
     private RemoteControlClient remoteControlClient;
     private AudioManager audioManager;
     private AudioStreamingManager audioStreamingManager;
@@ -101,7 +101,7 @@ public class AudioStreamingService extends Service implements NotificationManage
     @Override
     public int onStartCommand(Intent startIntent, int flags, int startId) {
         try {
-            RadioType messageObject = AudioStreamingManager.getInstance( AudioStreamingService.this).getCurrentAudio();
+            Radio messageObject = AudioStreamingManager.getInstance( AudioStreamingService.this).getCurrentAudio();
             if (messageObject == null) {
                 Handler handler = new Handler( AudioStreamingService.this.getMainLooper());
                 handler.post(new Runnable() {
@@ -149,7 +149,8 @@ public class AudioStreamingService extends Service implements NotificationManage
         return START_NOT_STICKY;
     }
 
-    private void createNotification(RadioType mSongDetail) {
+    @SuppressWarnings("EmptyTryBlock")
+    private void createNotification(Radio mSongDetail) {
         try {
 
             String channelId = "";
@@ -160,7 +161,7 @@ public class AudioStreamingService extends Service implements NotificationManage
             String songName = mSongDetail.getRadioTitle();
             String authorName = mSongDetail.getRadioPastor();
             String albumName = mSongDetail.getRadioSubtitle();
-            RadioType audioInfo = AudioStreamingManager.getInstance( AudioStreamingService.this).getCurrentAudio();
+            Radio audioInfo = AudioStreamingManager.getInstance( AudioStreamingService.this).getCurrentAudio();
 
             RemoteViews simpleContentView = new RemoteViews(getApplicationContext().getPackageName(), R.layout.player_small_notification);
             RemoteViews expandedView = null;
@@ -195,23 +196,24 @@ public class AudioStreamingService extends Service implements NotificationManage
 
             Bitmap albumArt = null;
             try {
-                ImageLoader imageLoader = ImageLoader.getInstance();
-                albumArt = imageLoader.loadImageSync( audioInfo.getRadioImage());
+     /*           ImageLoader imageLoader = ImageLoader.getInstance();
+                albumArt = imageLoader.loadImageSync( audioInfo.getRadioImage());*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            albumArt = Glide.with(getApplicationContext()).asBitmap().load(audioInfo.getRadioImage()).into(120, 120).get();
 
-            if (albumArt != null) {
+//            if (albumArt != null) {
                 notification.contentView.setImageViewBitmap( R.id.player_album_art, albumArt);
-                if (supportBigNotifications) {
+//                if (supportBigNotifications) {
                     notification.bigContentView.setImageViewBitmap( R.id.player_album_art, albumArt);
-                }
+       /*         }
             } else {
                 notification.contentView.setImageViewResource( R.id.player_album_art, R.drawable.wci_logo);
                 if (supportBigNotifications) {
                     notification.bigContentView.setImageViewResource( R.id.player_album_art, R.drawable.wci_logo);
                 }
-            }
+            }*/
             notification.contentView.setViewVisibility( R.id.player_progress_bar, View.GONE);
             notification.contentView.setViewVisibility( R.id.player_next, View.VISIBLE);
             notification.contentView.setViewVisibility( R.id.player_previous, View.VISIBLE);
@@ -333,7 +335,7 @@ public class AudioStreamingService extends Service implements NotificationManage
                 this.pendingIntent = pendingIntent;
             }
         } else if (id == NotificationManager.audioPlayStateChanged) {
-            RadioType mSongDetail = AudioStreamingManager.getInstance( AudioStreamingService.this).getCurrentAudio();
+            Radio mSongDetail = AudioStreamingManager.getInstance( AudioStreamingService.this).getCurrentAudio();
             if (mSongDetail != null) {
                 createNotification(mSongDetail);
             } else {

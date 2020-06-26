@@ -1,4 +1,4 @@
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 
 import com.axionteq.onlineradio.api.ApiClient;

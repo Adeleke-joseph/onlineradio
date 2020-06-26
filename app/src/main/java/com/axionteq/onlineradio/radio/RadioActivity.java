@@ -1,4 +1,4 @@
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -17,18 +17,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
-import com.axionteq.onlineradio.ConnectionDetector;
 import com.axionteq.onlineradio.R;
 import com.axionteq.onlineradio.api.ApiInterface;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.pd.chocobar.ChocoBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,42 +40,39 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RadioActivity extends AppCompatActivity implements CurrentSessionCallback, View.OnClickListener {
 
+    private static final String TAG = Logger.makeLogTag(RadioActivity.class);
     TextView tvRadio, tvPastor, tvSubtitle;
-    CustomToast toast;
-    ConnectionDetector connectionDetector = new ConnectionDetector( this );
-
-    public Call<List<RadioType>> call;
+    public Call<List<Radio>> call;
     public Context context;
     ImageView imgRadio;
     MediaPlayer mediaPlayer = new MediaPlayer();
     ShimmerFrameLayout shimmerFrameLayout;
     ProgressBar progressBar;
     Toolbar toolbar;
-    List<RadioType> radioTypeList = new ArrayList<>();
+    List<Radio> radioList = new ArrayList<>();
     String radioLink, radioImage, radioTitle, radioPastor, radioSubtitle;
     PlayPauseView btnPlay;
     ImageView imgPlayerBottom, imgPlayerBackground, imgPlayer;
+    Disposable disposable;
 
     AudioStreamingManager streamingManager;
     RelativeLayout pgPlayPauseLayout, rlMiniPlayer;
-    List<RadioType> radioType = new ArrayList<>();
+    List<Radio> radio = new ArrayList<>();
 
-    RadioType radioType1;
+    Radio radio1 = new Radio(  );
     AudioPlaybackListener playbackListener;
     ImageView btnForward, btnBackward;
 
     AudioManager audioManager;
     private ApiInterface apiInterface;
-    private RequestOptions options = new RequestOptions()
-            .centerCrop()
-            .placeholder( R.drawable.wci_logo )
-            .error( R.drawable.wci_logo );
+    private RequestOptions options = new RequestOptions().centerCrop().placeholder( R.drawable.wci_logo ).error( R.drawable.wci_logo );
 
-    public RadioActivity(Context context){}
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.radio_player );
+
         setRequestedOrientation( ActivityInfo.SCREEN_ORIENTATION_PORTRAIT );
         shimmerFrameLayout = findViewById( R.id.sfl_radio );
         toolbar = findViewById( R.id.tb_radio );
@@ -94,32 +93,20 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
         btnForward.setOnClickListener( this );
         btnPlay.setOnClickListener( this );
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl( "https://wcisantamaria.000webhostapp.com/" )
-                .addConverterFactory( GsonConverterFactory.create() )
-                .build();
+        Retrofit retrofit = new Retrofit.Builder().baseUrl( "https://wcisantamaria.000webhostapp.com/" ).addConverterFactory( GsonConverterFactory.create() ).build();
         apiInterface = retrofit.create( ApiInterface.class );
-
-        if (!connectionDetector.Connection()) {
-            Retry();
-        } else {
-            getRadio();
-        }
         btnPlay.Pause();
 
-        pgPlayPauseLayout.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                return;
-            }
+        pgPlayPauseLayout.setOnClickListener( view -> {
+
         } );
+        getRadio();
     }
 
     private void configAudioStreamer() {
         streamingManager = AudioStreamingManager.getInstance( this );
         streamingManager.setPlayMultiple( false );
-
-        streamingManager.setMediaList( radioType );
+        streamingManager.setMediaList( radio );
         streamingManager.setShowPlayerNotification( true );
         streamingManager.setPendingIntentAct( getNotificationPendingIntent() );
     }
@@ -133,48 +120,59 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
 
     private void getRadio() {
         call = apiInterface.getRadioType();
+        disposable = ReactiveNetwork.observeInternetConnectivity()
+                .subscribeOn( Schedulers.io() )
+                .observeOn( Schedulers.newThread () )
+                .subscribe( connectivity -> {
+                    if (connectivity) {
 
-        call.enqueue( new Callback<List<RadioType>>() {
-            @Override
-            public void onResponse(Call<List<RadioType>> call, Response<List<RadioType>> response) {
-                if (!response.isSuccessful()) {
-                    return;
-                }
+                        call.enqueue( new Callback<List<Radio>>() {
+                            @Override
+                            public void onResponse(Call<List<Radio>> call, Response<List<Radio>> response) {
+                              /*  if (!response.isSuccessful()) {
+                                    return;
+                                }*/
 
-                radioType = response.body();
+                                radio = response.body();
 
-                assert radioType != null;
-                for (RadioType radioType : radioType) {
+                                assert radio != null;
+                                for (Radio radio : RadioActivity.this.radio) {
 
-                    playSong( radioType );
+                                    String image, title, link, subtitle, pastor;
 
-                    configAudioStreamer();
-                    checkAlreadyPlaying();
-                    String image, title, link, subtitle, pastor;
+                                    title = radio.getRadioTitle();
+                                    image = radio.getRadioImage();
+                                    link = radio.getRadioLink();
 
-                    title = radioType.getRadioTitle();
-                    image = radioType.getRadioImage();
+                                    Glide.with( RadioActivity.this ).load( image ).apply( options ).into( imgRadio );
+                                    pastor = radio.getRadioPastor();
+                                    subtitle = radio.getRadioSubtitle();
 
-                    Glide.with( RadioActivity.this ).load( radioType.getRadioImage() ).apply( options ).into( imgRadio );
-                    pastor = radioType.getRadioPastor();
-                    subtitle = radioType.getRadioSubtitle();
+                                    tvPastor.setText( pastor );
+                                    tvSubtitle.setText( subtitle );
+                                    tvRadio.setText( title );
 
-                    tvPastor.setText( pastor );
-                    tvSubtitle.setText( subtitle );
-                    tvRadio.setText( title );
+                                    shimmerFrameLayout.stopShimmer();
+                                    shimmerFrameLayout.setVisibility( View.GONE );
+                                    radio = new Radio( title, image, link, pastor, subtitle );
+                                    radio1 = radio;
+                                    playSong( radio );
 
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility( View.GONE );
-                }
-            }
+//                                    checkAlreadyPlaying();
+                                    configAudioStreamer();
 
-            @Override
-            public void onFailure(Call<List<RadioType>> call, Throwable t) {
-                Toast.makeText( RadioActivity.this, "Check internet connection and try again",  Toast.LENGTH_LONG).show();
-//                toast.createToast( "Check internet connection and try again", 0 );
-                Retry();
-            }
-        } );
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<List<Radio>> call, Throwable t) {
+                                Toast.makeText( RadioActivity.this, "Check internet connection and try again", Toast.LENGTH_LONG ).show();
+                                Logger.e( TAG, t, "Network" );
+                            }
+                        } );
+                    }
+                }, throwable -> Logger.i( TAG, throwable.getLocalizedMessage() )
+                );
     }
 
     @Override
@@ -186,6 +184,7 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Logger.e( TAG, e, "onStart" );
         }
     }
 
@@ -196,21 +195,22 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
 
     @Override
     protected void onStop() {
+        super.onStop();
         try {
             if (streamingManager != null) {
                 streamingManager.unSubscribeCallBack();
             }
         } catch (Exception e) {
             e.printStackTrace();
+//            Logger.e( TAG, e, "onStop" );
         }
-        super.onStop();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_play:
-                if (radioType != null) {
+                if (radio1 != null) {
                     playPauseEvent( view );
                 }
                 break;
@@ -222,7 +222,7 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
             streamingManager.onPause();
             ((PlayPauseView) v).Pause();
         } else {
-            streamingManager.onPlay( radioType1 );
+            streamingManager.onPlay( radio1 );
             ((PlayPauseView) v).Play();
         }
     }
@@ -234,31 +234,31 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
             case PlaybackStateCompat.STATE_PLAYING:
                 pgPlayPauseLayout.setVisibility( View.INVISIBLE );
                 btnPlay.Play();
-                if (radioType1 != null) {
-                    radioType1.setPlayState( PlaybackStateCompat.STATE_PLAYING );
+                if (radio1 != null) {
+                    radio1.setPlayState( PlaybackStateCompat.STATE_PLAYING );
                 }
                 break;
             case PlaybackStateCompat.STATE_PAUSED:
                 pgPlayPauseLayout.setVisibility( View.INVISIBLE );
                 btnPlay.Pause();
-                if (radioType1 != null) {
-                    radioType1.setPlayState( PlaybackStateCompat.STATE_PAUSED );
+                if (radio1 != null) {
+                    radio1.setPlayState( PlaybackStateCompat.STATE_PAUSED );
                 }
                 break;
             case PlaybackStateCompat.STATE_NONE:
-                radioType1.setPlayState( PlaybackStateCompat.STATE_NONE );
+                radio1.setPlayState( PlaybackStateCompat.STATE_NONE );
                 break;
             case PlaybackStateCompat.STATE_STOPPED:
                 pgPlayPauseLayout.setVisibility( View.INVISIBLE );
                 btnPlay.Pause();
-                if (radioType1 != null) {
-                    radioType1.setPlayState( PlaybackStateCompat.STATE_NONE );
+                if (radio1 != null) {
+                    radio1.setPlayState( PlaybackStateCompat.STATE_NONE );
                 }
                 break;
             case PlaybackStateCompat.STATE_BUFFERING:
                 pgPlayPauseLayout.setVisibility( View.VISIBLE );
-                if (radioType1 != null) {
-                    radioType1.setPlayState( PlaybackStateCompat.STATE_NONE );
+                if (radio1 != null) {
+                    radio1.setPlayState( PlaybackStateCompat.STATE_NONE );
                 }
                 break;
         }
@@ -266,59 +266,61 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
 
     @Override
     public void playSongComplete() {
-
+        String playsongcomplete;
     }
 
     @Override
     public void currentSeekBarPosition(int progress) {
+    }
+
+    @Override
+    public void playCurrent(int indexP, Radio currentAudio) {
+        showMediaInfo( currentAudio );
+
+    }
+
+    private void showMediaInfo(Radio currentAudio) {
+    }
+
+    @Override
+    public void playNext(int indexP, Radio currentAudio) {
+        int progress = 10;
 
     }
 
     @Override
-    public void playCurrent(int indexP, RadioType currentAudio) {
+    public void playPrevious(int indexP, Radio currentAudio) {
+        int progress = 10;
 
     }
 
-    @Override
-    public void playNext(int indexP, RadioType currentAudio) {
-
-    }
-
-    @Override
-    public void playPrevious(int indexP, RadioType currentAudio) {
-
-    }
-
-    private void playSong(RadioType media) {
+    private void playSong(Radio media) {
         if (streamingManager != null) {
             streamingManager.onPlay( media );
+            radio = Collections.unmodifiableList( (List<Radio>) media );
+            configAudioStreamer();
         }
     }
 
-    private void checkAlreadyPlaying() {
+   /* private void checkAlreadyPlaying() {
         if (streamingManager.isPlaying()) {
-            radioType1 = streamingManager.getCurrentAudio();
-            if (radioType1 != null) {
-                radioType1.setPlayState( streamingManager.mLastPlaybackState );
+//            radio1 = streamingManager.getCurrentAudio();
+            if (radio1 != null) {
+                radio1.setPlayState( streamingManager.mLastPlaybackState );
             }
         }
     }
+*/
 
-    public void Retry() {
-/*        ChocoBar.builder().setActivity( RadioActivity.this ).setActionText( "Retry" )
-                .setActionClickListener( new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getRadio();
-                    }
-
-                } )
-                .setText( "Internet Connection Error" )
-                .setDuration( ChocoBar.LENGTH_INDEFINITE )
-                .setIcon( R.drawable.ic_info_outline_black_24dp )
-                .build()
-                .show();*/
+    private void safelyDispose(Disposable disposable) {
+        if (disposable != null && !disposable.isDisposed()) {
+            disposable.dispose();
+        }
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        safelyDispose( disposable );
+    }
 }

@@ -1,4 +1,4 @@
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.app.PendingIntent;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,12 +17,12 @@ public class AudioStreamingManager extends StreamingManager {
     private static final String TAG = Logger.makeLogTag( AudioStreamingManager.class );
     private static final long PROGRESS_UPDATE_INTERNAL = 1000;
     private static final long PROGRESS_UPDATE_INITIAL_INTERVAL = 100;
-    public static volatile Handler applicationHandler = null;
+    static volatile Handler applicationHandler = null;
     private static volatile AudioStreamingManager instance = null;
     private final Handler mHandler = new Handler();
     private final ScheduledExecutorService mExecutorService = Executors.newSingleThreadScheduledExecutor();
-    public PendingIntent pendingIntent;
-    public int mLastPlaybackState;
+    private PendingIntent pendingIntent;
+    int mLastPlaybackState;
     private AudioPlaybackListener audioPlayback;
     private CurrentSessionCallback currentSessionCallback;
     private final Runnable mUpdateProgressTask = new Runnable() {
@@ -36,14 +35,14 @@ public class AudioStreamingManager extends StreamingManager {
     private int index = 0;
     private boolean playMultiple = false;
     private boolean showPlayerNotification = false;
-    private RadioType currentAudio;
-    private List<RadioType> mediaList = new ArrayList<>();
+    private Radio currentAudio;
+    private List<Radio> mediaList = new ArrayList<>();
     private ScheduledFuture<?> mScheduleFuture;
     private long currentPosition = 0;
     private int duration = 0;
 
 
-    public static AudioStreamingManager getInstance(Context context) {
+    static AudioStreamingManager getInstance(Context context) {
         if (instance == null) {
             synchronized (AudioStreamingManager.class) {
                 instance = new AudioStreamingManager();
@@ -56,7 +55,7 @@ public class AudioStreamingManager extends StreamingManager {
         return instance;
     }
 
-    public void subscribesCallBack(CurrentSessionCallback callback) {
+    void subscribesCallBack(CurrentSessionCallback callback) {
         this.currentSessionCallback = callback;
     }
 
@@ -64,11 +63,11 @@ public class AudioStreamingManager extends StreamingManager {
         return this.index;
     }
 
-    public void unSubscribeCallBack() {
+    void unSubscribeCallBack() {
         this.currentSessionCallback = null;
     }
 
-    public RadioType getCurrentAudio() {
+    Radio getCurrentAudio() {
         return currentAudio;
     }
 
@@ -85,23 +84,23 @@ public class AudioStreamingManager extends StreamingManager {
         return playMultiple;
     }
 
-    public void setPlayMultiple(boolean playMultiple) {
+    void setPlayMultiple(boolean playMultiple) {
         this.playMultiple = playMultiple;
     }
 
-    public boolean isPlaying() {
+    boolean isPlaying() {
         return instance.audioPlayback.isPlaying();
     }
 
-    public void setPendingIntentAct(PendingIntent mPendingIntent) {
+    void setPendingIntentAct(PendingIntent mPendingIntent) {
         this.pendingIntent = mPendingIntent;
     }
 
-    public void setShowPlayerNotification(boolean showPlayerNotification) {
+    void setShowPlayerNotification(boolean showPlayerNotification) {
         this.showPlayerNotification = showPlayerNotification;
     }
 
-    void setMediaList(List<RadioType> currentAudioList) {
+    void setMediaList(List<Radio> currentAudioList) {
         if (this.mediaList != null) {
             this.mediaList.clear();
             this.mediaList.addAll( currentAudioList  );
@@ -117,14 +116,16 @@ public class AudioStreamingManager extends StreamingManager {
     }
 
     @Override
-    public void onPlay(RadioType infoData) {
+    public void onPlay(Radio infoData) {
         if (infoData == null) {
             return;
         }
         if (playMultiple && !isMediaListEmpty()) {
             index = mediaList.indexOf( infoData );
         }
-        if (this.currentAudio != null && this.currentAudio.getId().equalsIgnoreCase( infoData.getId() ) && instance.audioPlayback != null && instance.audioPlayback.isPlaying()) {
+        if (this.currentAudio != null
+              //  && this.currentAudio.getId().equalsIgnoreCase( infoData.getId() )
+                && instance.audioPlayback != null && instance.audioPlayback.isPlaying()) {
             onPause();
         } else {
             this.currentAudio = infoData;
@@ -158,7 +159,7 @@ public class AudioStreamingManager extends StreamingManager {
     public void onSkipToNext() {
         int nextIndex = index + 1;
         if (isValidIndex( true, nextIndex )) {
-            RadioType metaData = mediaList.get( nextIndex );
+            Radio metaData = mediaList.get( nextIndex );
             onPlay( metaData );
             if (instance.currentSessionCallback != null) {
                 currentSessionCallback.playNext( nextIndex, metaData );
@@ -170,7 +171,7 @@ public class AudioStreamingManager extends StreamingManager {
     public void onSkipToPrevious() {
         int prvIndex = index - 1;
         if (isValidIndex( false, prvIndex )) {
-            RadioType metaData = mediaList.get( prvIndex );
+            Radio metaData = mediaList.get( prvIndex );
             onPlay( metaData );
             if (instance.currentSessionCallback != null) {
                 currentSessionCallback.playPrevious( prvIndex, metaData );
@@ -228,7 +229,7 @@ public class AudioStreamingManager extends StreamingManager {
         }, 400 );
     }
 
-    public void handlePauseRequest() {
+    void handlePauseRequest() {
         Logger.d( TAG, "handlePauseRequest: mState=" + audioPlayback.getState() );
         if (audioPlayback != null && audioPlayback.isPlaying()) {
             audioPlayback.pause();

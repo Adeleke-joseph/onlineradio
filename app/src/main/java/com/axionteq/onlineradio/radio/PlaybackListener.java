@@ -3,7 +3,7 @@
  * You should have received a copy of the license in this archive (see LICENSE).
  * Copyright @Dibakar_Mistry(dibakar.ece@gmail.com), 2017.
  */
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 
 public interface PlaybackListener {
@@ -25,7 +25,7 @@ public interface PlaybackListener {
 
     void updateLastKnownStreamPosition();
 
-    void play(RadioType item);
+    void play(Radio item);
 
     void pause();
 

@@ -9,7 +9,7 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.axionteq.onlineradio.radio.radio.RadioActivity;
+import com.axionteq.onlineradio.radio.RadioActivity;
 
 public class LauncherActivity extends AppCompatActivity {
 
@@ -26,14 +26,8 @@ public class LauncherActivity extends AppCompatActivity {
         new Handler().postDelayed( new Runnable() {
             @Override
             public void run() {
-                SharedPreferences sharedPreferences = getSharedPreferences( "user_data", MODE_PRIVATE );
-                if (sharedPreferences.getBoolean( "loggedIn", false )) {
                     startActivity( new Intent( LauncherActivity.this, RadioActivity.class ) );
                     finish();
-                } else {
-                    startActivity(new Intent(LauncherActivity.this, RadioActivity.class));
-                    finish();
-                }
             }
         }, SPLASH_TIME_OUT );
     }

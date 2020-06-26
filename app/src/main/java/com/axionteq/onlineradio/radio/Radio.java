@@ -1,4 +1,4 @@
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class RadioType implements Parcelable {
+public class Radio implements Parcelable {
 
     @Expose
     @SerializedName("title")
@@ -34,8 +34,7 @@ public class RadioType implements Parcelable {
     @SerializedName("subtitle")
     private String radioSubtitle;
 
-    RadioType(String radioTitle, String radioImage, String radioLink, String radioPastor, String radioSubtitle) {
-
+    Radio(String radioTitle, String radioImage, String radioLink, String radioPastor, String radioSubtitle) {
         this.radioTitle = radioTitle;
         this.radioImage = radioImage;
         this.radioLink = radioLink;
@@ -99,7 +98,7 @@ public class RadioType implements Parcelable {
         this.id = id;
     }
 
-    public RadioType() {
+    public Radio() {
 
     }
 
@@ -117,7 +116,7 @@ public class RadioType implements Parcelable {
         parcel.writeString( id );
     }
 
-    protected RadioType(Parcel in) {
+    protected Radio(Parcel in) {
         radioPastor = in.readString();
         radioSubtitle = in.readString();
         radioTitle = in.readString();
@@ -126,15 +125,15 @@ public class RadioType implements Parcelable {
         id = in.readString();
     }
 
-    public static final Parcelable.Creator<RadioType> CREATOR = new Parcelable.Creator<RadioType>() {
+    public static final Parcelable.Creator<Radio> CREATOR = new Parcelable.Creator<Radio>() {
         @Override
-        public RadioType createFromParcel(Parcel in) {
-            return new RadioType( in );
+        public Radio createFromParcel(Parcel in) {
+            return new Radio( in );
         }
 
         @Override
-        public RadioType[] newArray(int size) {
-            return new RadioType[size];
+        public Radio[] newArray(int size) {
+            return new Radio[size];
         }
     };
 }

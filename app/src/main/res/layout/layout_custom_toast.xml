@@ -14,8 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/md_space"
         android:layout_gravity="center_vertical"
-        android:contentDescription="@string/error_status"
-        android:layout_marginRight="@dimen/md_space" />
+        android:contentDescription="@string/error_status" />
 
     <TextView
         android:id="@+id/custom_toast_text"

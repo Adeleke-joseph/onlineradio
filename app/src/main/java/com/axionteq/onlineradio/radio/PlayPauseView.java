@@ -3,12 +3,13 @@
  * You should have received a copy of the license in this archive (see LICENSE).
  * Copyright @Dibakar_Mistry(dibakar.ece@gmail.com), 2017.
  */
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -28,7 +29,7 @@ import android.widget.ImageView;
 
 import com.axionteq.onlineradio.R;
 
-public class PlayPauseView extends ImageView {
+public class PlayPauseView extends androidx.appcompat.widget.AppCompatImageView {
 
     private static final Property<PlayPauseView, Integer> COLOR = new Property<PlayPauseView, Integer>( Integer.class, "color") {
         @Override
@@ -71,7 +72,7 @@ public class PlayPauseView extends ImageView {
         mPauseBackgroundColor = Color.parseColor("#000000");//colorTheme.data;
         mPlayBackgroundColor = Color.parseColor("#000000");//colorTheme.data;
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PlayPause);
+        @SuppressLint({"Recycle", "CustomViewStyleable"}) TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.PlayPause);
         isDrawCircle = a.getBoolean( R.styleable.PlayPause_isCircleDraw, isDrawCircle);
     }
 

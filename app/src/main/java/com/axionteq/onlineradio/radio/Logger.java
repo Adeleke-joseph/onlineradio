@@ -3,7 +3,7 @@
  * You should have received a copy of the license in this archive (see LICENSE).
  * Copyright @Dibakar_Mistry(dibakar.ece@gmail.com), 2017.
  */
-package com.axionteq.onlineradio.radio.radio;
+package com.axionteq.onlineradio.radio;
 
 
 import android.util.Log;
@@ -12,18 +12,18 @@ import com.nostra13.universalimageloader.BuildConfig;
 
 
 public class Logger {
-    private static final String LOG_PREFIX = "co.obware";
+    private static final String LOG_PREFIX = "com.axionteq";
     private static final int LOG_PREFIX_LENGTH = LOG_PREFIX.length();
     private static final int MAX_LOG_TAG_LENGTH = 23;
 
-    public static String makeLogTag(String str) {
+    private static String makeLogTag(String str) {
         if (str.length() > MAX_LOG_TAG_LENGTH - LOG_PREFIX_LENGTH) {
             return LOG_PREFIX + str.substring(0, MAX_LOG_TAG_LENGTH - LOG_PREFIX_LENGTH - 1);
         }
         return LOG_PREFIX + str;
     }
 
-    public static String makeLogTag(Class cls) {
+    static String makeLogTag(Class cls) {
         return makeLogTag(cls.getSimpleName());
     }
 
@@ -34,7 +34,7 @@ public class Logger {
         }
     }
 
-    public static void d(String tag, Object... messages) {
+    static void d(String tag, Object... messages) {
         if (BuildConfig.DEBUG) {
             log(tag, Log.DEBUG, null, messages);
         }
@@ -52,15 +52,15 @@ public class Logger {
         log(tag, Log.WARN, t, messages);
     }
 
-    public static void e(String tag, Object... messages) {
+    static void e(String tag, Object... messages) {
         log(tag, Log.ERROR, null, messages);
     }
 
-    public static void e(String tag, Throwable t, Object... messages) {
+    static void e(String tag, Throwable t, Object... messages) {
         log(tag, Log.ERROR, t, messages);
     }
 
-    public static void log(String tag, int level, Throwable t, Object... messages) {
+    private static void log(String tag, int level, Throwable t, Object... messages) {
         if (Log.isLoggable(tag, level)) {
             String message;
             if (t == null && messages != null && messages.length == 1) {
