@@ -36,6 +36,8 @@ public class NotificationManager {
 
     private int broadcasting = 0;
     private boolean animationInProgress;
+    private static volatile NotificationManager Instance = null;
+
 
     public interface NotificationCenterDelegate {
         void didReceivedNotification(int id, Object... args);
@@ -44,7 +46,6 @@ public class NotificationManager {
     }
 
     private class DelayedPost {
-
         private DelayedPost(int id, Object[] args) {
             this.id = id;
             this.args = args;
@@ -54,7 +55,6 @@ public class NotificationManager {
         private Object[] args;
     }
 
-    private static volatile NotificationManager Instance = null;
 
     static NotificationManager getInstance() {
         NotificationManager localInstance = Instance;
@@ -73,7 +73,7 @@ public class NotificationManager {
         animationInProgress = value;
         if (!animationInProgress && !delayedPosts.isEmpty()) {
             for (DelayedPost delayedPost : delayedPosts) {
-                postNotificationNameInternal(delayedPost.id, true, delayedPost.args);
+                postNotificationNameInternal( delayedPost.id, true, delayedPost.args );
             }
             delayedPosts.clear();
         }
@@ -81,49 +81,49 @@ public class NotificationManager {
 
     void postNotificationName(int id, Object... args) {
         boolean allowDuringAnimation = false;
-        postNotificationNameInternal(id, allowDuringAnimation, args);
+        postNotificationNameInternal( id, allowDuringAnimation, args );
     }
 
     private void postNotificationNameInternal(int id, boolean allowDuringAnimation, Object... args) {
         if (DEBUG_VERSION) {
             if (Thread.currentThread() != AudioStreamingManager.applicationHandler.getLooper().getThread()) {
-                throw new RuntimeException("postNotificationName allowed only from MAIN thread");
+                throw new RuntimeException( "postNotificationName allowed only from MAIN thread" );
             }
         }
         if (!allowDuringAnimation && animationInProgress) {
-            DelayedPost delayedPost = new DelayedPost(id, args);
-            delayedPosts.add(delayedPost);
+            DelayedPost delayedPost = new DelayedPost( id, args );
+            delayedPosts.add( delayedPost );
             if (DEBUG_VERSION) {
-                Log.e("tmessages", "delay post notification " + id + " with args count = " + args.length);
+                Log.e( "tmessages", "delay post notification " + id + " with args count = " + args.length );
             }
             return;
         }
         broadcasting++;
-        ArrayList<Object> objects = observers.get(id);
+        ArrayList<Object> objects = observers.get( id );
         if (objects != null && !objects.isEmpty()) {
             for (int a = 0; a < objects.size(); a++) {
-                Object obj = objects.get(a);
-                ((NotificationCenterDelegate) obj).didReceivedNotification(id, args);
+                Object obj = objects.get( a );
+                ((NotificationCenterDelegate) obj).didReceivedNotification( id, args );
             }
         }
         broadcasting--;
         if (broadcasting == 0) {
             if (removeAfterBroadcast.size() != 0) {
                 for (int a = 0; a < removeAfterBroadcast.size(); a++) {
-                    int key = removeAfterBroadcast.keyAt(a);
-                    ArrayList<Object> arrayList = removeAfterBroadcast.get(key);
+                    int key = removeAfterBroadcast.keyAt( a );
+                    ArrayList<Object> arrayList = removeAfterBroadcast.get( key );
                     for (int b = 0; b < arrayList.size(); b++) {
-                        removeObserver(arrayList.get(b), key);
+                        removeObserver( arrayList.get( b ), key );
                     }
                 }
                 removeAfterBroadcast.clear();
             }
             if (addAfterBroadcast.size() != 0) {
                 for (int a = 0; a < addAfterBroadcast.size(); a++) {
-                    int key = addAfterBroadcast.keyAt(a);
-                    ArrayList<Object> arrayList = addAfterBroadcast.get(key);
+                    int key = addAfterBroadcast.keyAt( a );
+                    ArrayList<Object> arrayList = addAfterBroadcast.get( key );
                     for (int b = 0; b < arrayList.size(); b++) {
-                        addObserver(arrayList.get(b), key);
+                        addObserver( arrayList.get( b ), key );
                     }
                 }
                 addAfterBroadcast.clear();
@@ -134,55 +134,55 @@ public class NotificationManager {
     void addObserver(Object observer, int id) {
         if (DEBUG_VERSION) {
             if (Thread.currentThread() != AudioStreamingManager.applicationHandler.getLooper().getThread()) {
-                throw new RuntimeException("addObserver allowed only from MAIN thread");
+                throw new RuntimeException( "addObserver allowed only from MAIN thread" );
             }
         }
         if (broadcasting != 0) {
-            ArrayList<Object> arrayList = addAfterBroadcast.get(id);
+            ArrayList<Object> arrayList = addAfterBroadcast.get( id );
             if (arrayList == null) {
                 arrayList = new ArrayList<>();
-                addAfterBroadcast.put(id, arrayList);
+                addAfterBroadcast.put( id, arrayList );
             }
-            arrayList.add(observer);
+            arrayList.add( observer );
             return;
         }
-        ArrayList<Object> objects = observers.get(id);
+        ArrayList<Object> objects = observers.get( id );
         if (objects == null) {
-            observers.put(id, (objects = new ArrayList<>()));
+            observers.put( id, (objects = new ArrayList<>()) );
         }
-        if (objects.contains(observer)) {
+        if (objects.contains( observer )) {
             return;
         }
-        objects.add(observer);
+        objects.add( observer );
     }
 
     void removeObserver(Object observer, int id) {
         if (DEBUG_VERSION) {
             if (Thread.currentThread() != AudioStreamingManager.applicationHandler.getLooper().getThread()) {
-                throw new RuntimeException("removeObserver allowed only from MAIN thread");
+                throw new RuntimeException( "removeObserver allowed only from MAIN thread" );
             }
         }
         if (broadcasting != 0) {
-            ArrayList<Object> arrayList = removeAfterBroadcast.get(id);
+            ArrayList<Object> arrayList = removeAfterBroadcast.get( id );
             if (arrayList == null) {
                 arrayList = new ArrayList<>();
-                removeAfterBroadcast.put(id, arrayList);
+                removeAfterBroadcast.put( id, arrayList );
             }
-            arrayList.add(observer);
+            arrayList.add( observer );
             return;
         }
-        ArrayList<Object> objects = observers.get(id);
+        ArrayList<Object> objects = observers.get( id );
         if (objects != null) {
-            objects.remove(observer);
+            objects.remove( observer );
         }
     }
 
     public void notifyNewSongLoaded(int id, Object... args) {
-        ArrayList<Object> objects = observers.get(id);
+        ArrayList<Object> objects = observers.get( id );
         if (objects != null && !objects.isEmpty()) {
             for (int a = 0; a < objects.size(); a++) {
-                Object obj = objects.get(a);
-                ((NotificationCenterDelegate) obj).newSongLoaded(args);
+                Object obj = objects.get( a );
+                ((NotificationCenterDelegate) obj).newSongLoaded( args );
             }
         }
     }

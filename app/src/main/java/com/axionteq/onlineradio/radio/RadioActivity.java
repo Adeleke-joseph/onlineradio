@@ -26,7 +26,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.disposables.Disposable;
@@ -84,6 +83,7 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
         btnPlay = findViewById( R.id.btn_play );
         btnBackward = findViewById( R.id.img_previous );
         btnForward = findViewById( R.id.img_next );
+        shimmerFrameLayout.setVisibility( View.VISIBLE );
 
         playbackListener = new AudioPlaybackListener( this );
         shimmerFrameLayout.startShimmer();
@@ -105,9 +105,9 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
 
     private void configAudioStreamer() {
         streamingManager = AudioStreamingManager.getInstance( this );
-        streamingManager.setPlayMultiple( false );
+        streamingManager.setPlayMultiple();
         streamingManager.setMediaList( radio );
-        streamingManager.setShowPlayerNotification( true );
+        streamingManager.setShowPlayerNotification();
         streamingManager.setPendingIntentAct( getNotificationPendingIntent() );
     }
 
@@ -212,16 +212,20 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
             case R.id.btn_play:
                 if (radio1 != null) {
                     playPauseEvent( view );
+                }else {
+                    Toast.makeText( this, "Error in link", Toast.LENGTH_SHORT ).show();
                 }
                 break;
         }
     }
 
     private void playPauseEvent(View v) {
-        if (streamingManager.isPlaying()) {
+        if (radio1==null){
+            Toast.makeText( RadioActivity.this, "Check internet connection and try again", Toast.LENGTH_LONG ).show();
+        }else if (streamingManager.isPlaying()) {
             streamingManager.onPause();
             ((PlayPauseView) v).Pause();
-        } else {
+        }else {
             streamingManager.onPlay( radio1 );
             ((PlayPauseView) v).Play();
         }
@@ -269,7 +273,6 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
         String playsongcomplete;
     }
 
-    @Override
     public void currentSeekBarPosition(int progress) {
     }
 
@@ -282,13 +285,11 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
     private void showMediaInfo(Radio currentAudio) {
     }
 
-    @Override
     public void playNext(int indexP, Radio currentAudio) {
         int progress = 10;
 
     }
 
-    @Override
     public void playPrevious(int indexP, Radio currentAudio) {
         int progress = 10;
 
@@ -297,7 +298,7 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
     private void playSong(Radio media) {
         if (streamingManager != null) {
             streamingManager.onPlay( media );
-            radio = Collections.unmodifiableList( (List<Radio>) media );
+            radio.add( media );
             configAudioStreamer();
         }
     }

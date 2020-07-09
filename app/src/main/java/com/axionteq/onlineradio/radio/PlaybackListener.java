@@ -19,9 +19,9 @@ public interface PlaybackListener {
 
     boolean isPlaying();
 
-    int getCurrentStreamPosition();
+//    int getCurrentStreamPosition();
 
-    void setCurrentStreamPosition(int pos);
+//    void setCurrentStreamPosition(int pos);
 
     void updateLastKnownStreamPosition();
 
@@ -29,7 +29,7 @@ public interface PlaybackListener {
 
     void pause();
 
-    void seekTo(int position);
+//    void seekTo(int position);
 
     void setCurrentMediaId(String mediaId);
 
@@ -47,5 +47,5 @@ public interface PlaybackListener {
 
     void setCallback(Callback callback);
 
-    int getCurrentTotalDuration();
+//    int getCurrentTotalDuration();
 }

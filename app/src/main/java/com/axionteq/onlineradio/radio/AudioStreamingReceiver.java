@@ -41,12 +41,12 @@ public class AudioStreamingReceiver extends BroadcastReceiver {
                     break;
                 case KeyEvent.KEYCODE_MEDIA_STOP:
                     break;
-                case KeyEvent.KEYCODE_MEDIA_NEXT:
+               /* case KeyEvent.KEYCODE_MEDIA_NEXT:
                     audioStreamingManager.onSkipToNext();
                     break;
-                case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                    case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
                     audioStreamingManager.onSkipToPrevious();
-                    break;
+                    break;*/
             }
         } else {
             audioStreamingManager = AudioStreamingManager.getInstance(context);
@@ -58,15 +58,15 @@ public class AudioStreamingReceiver extends BroadcastReceiver {
                 case android.media.AudioManager.ACTION_AUDIO_BECOMING_NOISY:
                     audioStreamingManager.onPause();
                     break;
-                case AudioStreamingService.NOTIFY_NEXT:
+               /* case AudioStreamingService.NOTIFY_NEXT:
                     audioStreamingManager.onSkipToNext();
-                    break;
+                    break;*/
                 case AudioStreamingService.NOTIFY_CLOSE:
                     audioStreamingManager.cleanupPlayer( context, true, true );
                     break;
-                case AudioStreamingService.NOTIFY_PREVIOUS:
+               /* case AudioStreamingService.NOTIFY_PREVIOUS:
                     audioStreamingManager.onSkipToPrevious();
-                    break;
+                    break;*/
             }
         }
     }

@@ -18,6 +18,7 @@
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/sfl_radio"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent"
         app:shimmer_auto_start="true"
         app:shimmer_duration="800">
@@ -50,34 +51,51 @@
             android:id="@+id/tv_radio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/sm_space"
-            android:fontFamily="@font/montserrat_bold"
+            android:paddingStart="@dimen/md_space"
+            android:fontFamily="@font/roboto"
             android:textAlignment="center"
+            android:text="Covenant Hour Of Prayer"
+            android:paddingBottom="@dimen/sm_space"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingTop="@dimen/sm_space"
             android:textColor="@color/colorPrimaryText"
             android:textIsSelectable="true"
-            android:textSize="@dimen/text_medium" />
+            android:textStyle="bold"
+            android:textSize="@dimen/text_large"
+            tools:ignore="RtlSymmetry" />
 
         <TextView
             android:id="@+id/radio_tv_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/sm_space"
-            android:fontFamily="@font/montserrat_bold"
-            android:textAlignment="viewStart"
+            android:paddingStart="@dimen/md_space"
+            android:fontFamily="@font/roboto"
+            android:textStyle="bold"
+            android:layout_gravity="center"
             android:textColor="@color/colorPrimaryText"
+            android:text="Why we must bring people to church"
             android:textIsSelectable="true"
+            android:paddingBottom="@dimen/sm_space"
+            android:paddingTop="@dimen/sm_space"
             android:textSize="@dimen/text_medium" />
 
         <TextView
             android:id="@+id/radio_tv_pastor"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/sm_space"
-            android:fontFamily="@font/roboto_regular"
+            android:paddingStart="@dimen/md_space"
+            android:fontFamily="@font/roboto_medium"
             android:textAlignment="center"
+            android:textStyle="bold"
+            android:paddingBottom="@dimen/sm_space"
+            android:layout_gravity="center"
+            android:paddingTop="@dimen/sm_space"
             android:textColor="@color/colorPrimaryText"
+            android:text="Bishop David .O. Oyedepo"
             android:textIsSelectable="true"
-            android:textSize="@dimen/text_medium" />
+            android:textSize="@dimen/text_medium"
+            tools:ignore="RtlSymmetry" />
     </LinearLayout>
 
     <RelativeLayout
@@ -85,7 +103,7 @@
         android:layout_height="125dp">
 
         <include
-            layout="@layout/sliding_panel_player_bottom"
+            layout="@layout/radio_sliding_player_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>

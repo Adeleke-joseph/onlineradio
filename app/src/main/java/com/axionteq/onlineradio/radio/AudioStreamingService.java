@@ -46,11 +46,11 @@ public class AudioStreamingService extends Service implements NotificationManage
     public static final String CMD_STOP_CASTING = "CMD_STOP_CASTING";
     private static final int STOP_DELAY = 30000;
 
-    public static final String NOTIFY_PREVIOUS = "com.axionteq.onlineradio.musicTest.previous";
+//    public static final String NOTIFY_PREVIOUS = "com.axionteq.onlineradio.musicTest.previous";
     public static final String NOTIFY_CLOSE = "com.axionteq.onlineradio.musicTest.close";
     public static final String NOTIFY_PAUSE = "com.axionteq.onlineradio.musicTest.pause";
     public static final String NOTIFY_PLAY = "com.axionteq.onlineradio.musicTest.play";
-    public static final String NOTIFY_NEXT = "com.axionteq.onlineradio.musicTest.next";
+//    public static final String NOTIFY_NEXT = "com.axionteq.onlineradio.musicTest.next";
 
     private static boolean supportBigNotifications = true;
     private static boolean supportLockScreenControls = true;
@@ -80,11 +80,12 @@ public class AudioStreamingService extends Service implements NotificationManage
                         if (audioStreamingManager.isPlaying()) {
                             audioStreamingManager.handlePauseRequest();
                         }
-                    } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+                    }
+                    /*else if (state == TelephonyManager.CALL_STATE_IDLE) {
 
                     } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
 
-                    }
+                    }*/
                     super.onCallStateChanged(state, incomingNumber);
                 }
             };
@@ -104,12 +105,7 @@ public class AudioStreamingService extends Service implements NotificationManage
             Radio messageObject = AudioStreamingManager.getInstance( AudioStreamingService.this).getCurrentAudio();
             if (messageObject == null) {
                 Handler handler = new Handler( AudioStreamingService.this.getMainLooper());
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        stopSelf();
-                    }
-                });
+                handler.post( this::stopSelf );
                 return START_STICKY;
             }
 
@@ -126,7 +122,8 @@ public class AudioStreamingService extends Service implements NotificationManage
                     }
                     remoteControlClient.setTransportControlFlags( RemoteControlClient.FLAG_KEY_MEDIA_PLAY | RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
                             | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE | RemoteControlClient.FLAG_KEY_MEDIA_STOP
-                            | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS | RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
+                          //  | RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS | RemoteControlClient.FLAG_KEY_MEDIA_NEXT
+                    );
                 } catch (Exception e) {
                     Log.e("tmessages", e.toString());
                 }
@@ -141,9 +138,8 @@ public class AudioStreamingService extends Service implements NotificationManage
             if (ACTION_CMD.equals(action)) {
                 if (CMD_PAUSE.equals(command)) {
                     audioStreamingManager.handlePauseRequest();
-                } else if (CMD_STOP_CASTING.equals(command)) {
-                    //TODO FOR EXTERNAL DEVICE
-                }
+                }  //TODO FOR EXTERNAL DEVICE
+
             }
         }
         return START_NOT_STICKY;
@@ -279,18 +275,18 @@ public class AudioStreamingService extends Service implements NotificationManage
 
     private void setListeners(RemoteViews view) {
         try {
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
+           /* PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
                     getIntentForNotification(NOTIFY_PREVIOUS), PendingIntent.FLAG_UPDATE_CURRENT);
-            view.setOnClickPendingIntent( R.id.player_previous, pendingIntent);
+            view.setOnClickPendingIntent( R.id.player_previous, pendingIntent);*/
             pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
                     getIntentForNotification(NOTIFY_CLOSE), PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent( R.id.player_close, pendingIntent);
             pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
                     getIntentForNotification(NOTIFY_PAUSE), PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent( R.id.player_pause, pendingIntent);
-            pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
+           /* pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
                     getIntentForNotification(NOTIFY_NEXT), PendingIntent.FLAG_UPDATE_CURRENT);
-            view.setOnClickPendingIntent( R.id.player_next, pendingIntent);
+            view.setOnClickPendingIntent( R.id.player_next, pendingIntent);*/
             pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0,
                     getIntentForNotification(NOTIFY_PLAY), PendingIntent.FLAG_UPDATE_CURRENT);
             view.setOnClickPendingIntent( R.id.player_play, pendingIntent);

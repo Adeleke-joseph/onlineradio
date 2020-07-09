@@ -1,10 +1,10 @@
 package com.axionteq.onlineradio.radio;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.support.v4.media.session.PlaybackStateCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,28 +13,26 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+
 public class AudioStreamingManager extends StreamingManager {
+
     private static final String TAG = Logger.makeLogTag( AudioStreamingManager.class );
     private static final long PROGRESS_UPDATE_INTERNAL = 1000;
     private static final long PROGRESS_UPDATE_INITIAL_INTERVAL = 100;
     static volatile Handler applicationHandler = null;
+    @SuppressLint("StaticFieldLeak")
     private static volatile AudioStreamingManager instance = null;
     private final Handler mHandler = new Handler();
     private final ScheduledExecutorService mExecutorService = Executors.newSingleThreadScheduledExecutor();
     private PendingIntent pendingIntent;
-    int mLastPlaybackState;
+    private int mLastPlaybackState;
     private AudioPlaybackListener audioPlayback;
     private CurrentSessionCallback currentSessionCallback;
-    private final Runnable mUpdateProgressTask = new Runnable() {
-        @Override
-        public void run() {
-            updateProgress();
-        }
-    };
+//    private final Runnable mUpdateProgressTask = this::updateProgress;
     private Context context;
     private int index = 0;
     private boolean playMultiple = false;
-    private boolean showPlayerNotification = false;
+    private boolean showPlayerNotification = true;
     private Radio currentAudio;
     private List<Radio> mediaList = new ArrayList<>();
     private ScheduledFuture<?> mScheduleFuture;
@@ -71,10 +69,10 @@ public class AudioStreamingManager extends StreamingManager {
         return currentAudio;
     }
 
-    public int getDuration(){
+ /*   public int getDuration(){
         duration = audioPlayback.getCurrentTotalDuration();
         return duration;
-}
+}*/
 
     public String getCurrentAudioId() {
         return currentAudio != null ? currentAudio.getId() : "";
@@ -84,8 +82,8 @@ public class AudioStreamingManager extends StreamingManager {
         return playMultiple;
     }
 
-    void setPlayMultiple(boolean playMultiple) {
-        this.playMultiple = playMultiple;
+    void setPlayMultiple() {
+        this.playMultiple = false;
     }
 
     boolean isPlaying() {
@@ -96,8 +94,8 @@ public class AudioStreamingManager extends StreamingManager {
         this.pendingIntent = mPendingIntent;
     }
 
-    void setShowPlayerNotification(boolean showPlayerNotification) {
-        this.showPlayerNotification = showPlayerNotification;
+    void setShowPlayerNotification() {
+        this.showPlayerNotification = true;
     }
 
     void setMediaList(List<Radio> currentAudioList) {
@@ -145,17 +143,15 @@ public class AudioStreamingManager extends StreamingManager {
         handleStopRequest( null );
     }
 
-    @Override
-    public void onSeekTo(long position) {
-        audioPlayback.seekTo( (int) position );
+ /*   public void onSeekTo(long position) {
+//        audioPlayback.seekTo( (int) position );
     }
 
-    @Override
     public int lastSeekPosition() {
-        return (audioPlayback == null) ? 0 : (int) audioPlayback.getCurrentStreamPosition();
+//        return (audioPlayback == null) ? 0 : (int) audioPlayback.getCurrentStreamPosition();
+        return 0;
     }
 
-    @Override
     public void onSkipToNext() {
         int nextIndex = index + 1;
         if (isValidIndex( true, nextIndex )) {
@@ -167,17 +163,16 @@ public class AudioStreamingManager extends StreamingManager {
         }
     }
 
-    @Override
-    public void onSkipToPrevious() {
-        int prvIndex = index - 1;
+    void onSkipToPrevious() {
+       int prvIndex = index - 1;
         if (isValidIndex( false, prvIndex )) {
             Radio metaData = mediaList.get( prvIndex );
             onPlay( metaData );
             if (instance.currentSessionCallback != null) {
                 currentSessionCallback.playPrevious( prvIndex, metaData );
             }
-        }
-    }
+        }*//*
+    }*/
 
     /**
      * @return
@@ -186,10 +181,11 @@ public class AudioStreamingManager extends StreamingManager {
         return (mediaList == null || mediaList.size() == 0);
     }
 
-    /**
+     /**
      * @param isIncremental
      * @return
      */
+    /**
     private boolean isValidIndex(boolean isIncremental, int index) {
         if (isIncremental) {
             return (playMultiple && !isMediaListEmpty() && mediaList.size() > index);
@@ -197,8 +193,10 @@ public class AudioStreamingManager extends StreamingManager {
             return (playMultiple && !isMediaListEmpty() && index >= 0);
         }
     }
+     **/
 
-    public void handlePlayRequest() {
+
+    private void handlePlayRequest() {
         Logger.d( TAG, "handlePlayRequest: mState=" + audioPlayback.getState() );
         if (audioPlayback != null && currentAudio != null) {
             audioPlayback.play( currentAudio );
@@ -239,16 +237,16 @@ public class AudioStreamingManager extends StreamingManager {
         }
     }
 
-    public void handleStopRequest(String withError) {
+    private void handleStopRequest(String withError) {
         Logger.d( TAG, "handleStopRequest: mState=" + audioPlayback.getState() + " error=", withError );
         audioPlayback.stop( true );
     }
 
-    public void cleanupPlayer(Context context, boolean notify, boolean stopService) {
+    void cleanupPlayer(Context context, boolean notify, boolean stopService) {
         cleanupPlayer( notify, stopService );
     }
 
-    public void cleanupPlayer(boolean notify, boolean stopService) {
+    private void cleanupPlayer(boolean notify, boolean stopService) {
         handlePauseRequest();
         audioPlayback.stop( true );
         if (stopService) {
@@ -257,7 +255,7 @@ public class AudioStreamingManager extends StreamingManager {
         }
     }
 
-    public void scheduleSeekBarUpdate() {
+    /*public void scheduleSeekBarUpdate() {
         stopSeekBarUpdate();
         if (!mExecutorService.isShutdown()) {
             mScheduleFuture = mExecutorService.scheduleAtFixedRate(
@@ -269,9 +267,7 @@ public class AudioStreamingManager extends StreamingManager {
                     }, PROGRESS_UPDATE_INITIAL_INTERVAL,
                     PROGRESS_UPDATE_INTERNAL, TimeUnit.MILLISECONDS );
         }
-    }
-
-    public void stopSeekBarUpdate() {
+    }   private void stopSeekBarUpdate() {
         if (mScheduleFuture != null) {
             mScheduleFuture.cancel( false );
         }
@@ -284,7 +280,7 @@ public class AudioStreamingManager extends StreamingManager {
         if (instance.mLastPlaybackState != PlaybackStateCompat.STATE_PAUSED && instance.currentSessionCallback != null) {
             instance.currentSessionCallback.currentSeekBarPosition( (int) audioPlayback.getCurrentStreamPosition() );
         }
-    }
+    }*/
 
     static class MyStatusCallback implements PlaybackListener.Callback {
         @Override
@@ -293,7 +289,7 @@ public class AudioStreamingManager extends StreamingManager {
                 if (instance.currentSessionCallback != null) {
                     instance.currentSessionCallback.playSongComplete();
                 }
-                instance.onSkipToNext();
+               // instance.onSkipToNext();
             } else {
                 instance.handleStopRequest( null );
             }
@@ -302,11 +298,6 @@ public class AudioStreamingManager extends StreamingManager {
         @Override
         public void onPlaybackStatusChanged(int state) {
             try {
-                if (state == PlaybackStateCompat.STATE_PLAYING) {
-                    instance.scheduleSeekBarUpdate();
-                } else {
-                    instance.stopSeekBarUpdate();
-                }
                 if (instance.currentSessionCallback != null) {
                     instance.currentSessionCallback.updatePlaybackState( state );
                 }

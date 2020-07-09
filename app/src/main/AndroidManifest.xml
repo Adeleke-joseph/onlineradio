@@ -37,14 +37,13 @@
             tools:ignore="ExportedService" />
 
         <receiver android:name=".radio.AudioStreamingReceiver"
-            android:permission="TODO"
-            tools:ignore="ExportedReceiver">
+            android:permission="TODO">
             <intent-filter>
                 <action android:name="com.axionteq.onlineradio.close" />
                 <action android:name="com.axionteq.onlineradio.pause" />
-                <action android:name="com.axionteq.onlineradio.next" />
+<!--                <action android:name="com.axionteq.onlineradio.next" />-->
                 <action android:name="com.axionteq.onlineradio.play" />
-                <action android:name="com.axionteq.onlineradio.previous" />
+<!--                <action android:name="com.axionteq.onlineradio.previous" />-->
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
             </intent-filter>

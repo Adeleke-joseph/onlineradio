@@ -13,6 +13,7 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static android.media.MediaPlayer.OnCompletionListener;
 import static android.media.MediaPlayer.OnErrorListener;
@@ -21,7 +22,8 @@ import static android.media.MediaPlayer.OnSeekCompleteListener;
 
 
 public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnAudioFocusChangeListener,
-        OnCompletionListener, OnErrorListener, OnPreparedListener, OnSeekCompleteListener {
+        OnCompletionListener, OnErrorListener, OnPreparedListener//, OnSeekCompleteListener
+         {
     private static final String TAG = Logger.makeLogTag(AudioPlaybackListener.class);
 
     private static final float VOLUME_DUCK = 0.2f;
@@ -47,7 +49,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
     AudioPlaybackListener(Context context) {
         this.mContext = context;
         this.mAudioManager = (AudioManager) context.getSystemService( Context.AUDIO_SERVICE);
-        this.mWifiLock = ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).createWifiLock(WifiManager.WIFI_MODE_FULL, "dmAudioStreaming_Lock");
+        this.mWifiLock = ((WifiManager) Objects.requireNonNull( context.getApplicationContext().getSystemService( Context.WIFI_SERVICE ) )).createWifiLock(WifiManager.WIFI_MODE_FULL, "dmAudioStreaming_Lock");
         this.mState = PlaybackStateCompat.STATE_NONE;
     }
 
@@ -102,7 +104,6 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
         return mPlayOnFocusGain || (mMediaPlayer != null && mMediaPlayer.isPlaying());
     }
 
-    @Override
     public int getCurrentStreamPosition() {
         return mMediaPlayer != null ? mMediaPlayer.getCurrentPosition() : mCurrentPosition;
     }
@@ -156,6 +157,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
         }
     }
 
+
     @Override
     public void pause() {
         try {
@@ -180,8 +182,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
     }
 
 
-    @Override
-    public void seekTo(int position) {
+   /* public void seekTo(int position) {
         Logger.d(TAG, "seekTo called with ", position);
 
         if (mMediaPlayer == null) {
@@ -197,22 +198,20 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
                 mCallback.onPlaybackStatusChanged(mState);
             }
         }
-    }
+    }*/
 
     @Override
     public void setCallback(Callback callback) {
         this.mCallback = callback;
     }
 
-    @Override
-    public int getCurrentTotalDuration() {
+ /*   public int getCurrentTotalDuration() {
         return mMediaPlayer != null ? mMediaPlayer.getDuration() : mCurrentDuration;
-    }
+    }*/
 
-    @Override
-    public void setCurrentStreamPosition(int pos) {
-        this.mCurrentPosition = pos;
-    }
+//    public void setCurrentStreamPosition(int pos) {
+//        this.mCurrentPosition = pos;
+//    }
 
     @Override
     public void setCurrentMediaId(String mediaId) {
@@ -308,7 +307,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
         configMediaPlayerState();
     }
 
-    @Override
+/*    @Override
     public void onSeekComplete(MediaPlayer mp) {
         Logger.d(TAG, "onSeekComplete from MediaPlayer:", mp.getCurrentPosition());
         mCurrentPosition = mp.getCurrentPosition();
@@ -320,7 +319,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
         if (mCallback != null) {
             mCallback.onPlaybackStatusChanged(mState);
         }
-    }
+    }*/
 
     @Override
     public void onCompletion(MediaPlayer player) {
@@ -374,7 +373,7 @@ public class AudioPlaybackListener implements PlaybackListener, AudioManager.OnA
             mMediaPlayer.setOnPreparedListener(this);
             mMediaPlayer.setOnCompletionListener(this);
             mMediaPlayer.setOnErrorListener(this);
-            mMediaPlayer.setOnSeekCompleteListener(this);
+//            mMediaPlayer.setOnSeekCompleteListener(this);
         } else {
             mMediaPlayer.reset();
         }

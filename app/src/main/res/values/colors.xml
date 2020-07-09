@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#D32F2F</color>
     <color name="colorAccent">#FF5252</color>
 
-    <color name="colorPrimaryText">#000000</color>
+    <color name="colorPrimaryText">#212121</color>
     <color name="colorCardViewBackground">#CFCBCB</color>
     <color name="colorBackground">#C9C9B5</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -21,7 +21,7 @@
     <color name="colorList">#C8C9C9</color>
 
 
-    <array name="reds">
+   <!-- <array name="reds">
         <item>@color/md_red_500</item>
         <item>@color/md_red_50</item>
         <item>@color/md_red_100</item>
@@ -54,7 +54,7 @@
     <color name="md_red_500_25">#40f44336</color>
     <color name="md_red_500_50">#80f44336</color>
     <color name="md_red_500_75">#c0f44336</color>
-    <!-- pinks -->
+    &lt;!&ndash; pinks &ndash;&gt;
     <array name="pinks">
         <item>@color/md_pink_500</item>
         <item>@color/md_pink_50</item>
@@ -88,7 +88,7 @@
     <color name="md_pink_500_25">#40e91e63</color>
     <color name="md_pink_500_50">#80e91e63</color>
     <color name="md_pink_500_75">#c0e91e63</color>
-    <!-- purples -->
+    &lt;!&ndash; purples &ndash;&gt;
     <array name="purples">
         <item>@color/md_purple_500</item>
         <item>@color/md_purple_50</item>
@@ -122,7 +122,7 @@
     <color name="md_purple_500_25">#409c27b0</color>
     <color name="md_purple_500_50">#809c27b0</color>
     <color name="md_purple_500_75">#c09c27b0</color>
-    <!-- deep purples -->
+    &lt;!&ndash; deep purples &ndash;&gt;
     <array name="deep_purples">
         <item>@color/md_deep_purple_500</item>
         <item>@color/md_deep_purple_50</item>
@@ -156,7 +156,7 @@
     <color name="md_deep_purple_500_25">#40673ab7</color>
     <color name="md_deep_purple_500_50">#80673ab7</color>
     <color name="md_deep_purple_500_75">#c0673ab7</color>
-    <!-- indigos -->
+    &lt;!&ndash; indigos &ndash;&gt;
     <array name="indigos">
         <item>@color/md_indigo_500</item>
         <item>@color/md_indigo_50</item>
@@ -190,7 +190,7 @@
     <color name="md_indigo_500_25">#403f51b5</color>
     <color name="md_indigo_500_50">#803f51b5</color>
     <color name="md_indigo_500_75">#c03f51b5</color>
-    <!--blues-->
+    &lt;!&ndash;blues&ndash;&gt;
     <array name="blues">
         <item>@color/md_blue_500</item>
         <item>@color/md_blue_50</item>
@@ -224,7 +224,7 @@
     <color name="md_blue_500_25">#402196f3</color>
     <color name="md_blue_500_50">#802196f3</color>
     <color name="md_blue_500_75">#c02196f3</color>
-    <!-- light blues-->
+    &lt;!&ndash; light blues&ndash;&gt;
     <array name="light_blues">
         <item>@color/md_light_blue_500</item>
         <item>@color/md_light_blue_50</item>
@@ -258,7 +258,7 @@
     <color name="md_light_blue_500_25">#4003a9f4</color>
     <color name="md_light_blue_500_50">#8003a9f4</color>
     <color name="md_light_blue_500_75">#c003a9f4</color>
-    <!-- cyans -->
+    &lt;!&ndash; cyans &ndash;&gt;
     <array name="cyans">
         <item>@color/md_cyan_500</item>
         <item>@color/md_cyan_50</item>
@@ -292,7 +292,7 @@
     <color name="md_cyan_500_25">#4000bcd4</color>
     <color name="md_cyan_500_50">#8000bcd4</color>
     <color name="md_cyan_500_75">#c000bcd4</color>
-    <!-- teals -->
+    &lt;!&ndash; teals &ndash;&gt;
     <array name="teals">
         <item>@color/md_teal_500</item>
         <item>@color/md_teal_50</item>
@@ -326,7 +326,7 @@
     <color name="md_teal_500_25">#40009688</color>
     <color name="md_teal_500_50">#80009688</color>
     <color name="md_teal_500_75">#c8009688</color>
-    <!-- greens -->
+    &lt;!&ndash; greens &ndash;&gt;
     <array name="greens">
         <item>@color/md_green_500</item>
         <item>@color/md_green_50</item>
@@ -360,7 +360,7 @@
     <color name="md_green_500_25">#404caf50</color>
     <color name="md_green_500_50">#804caf50</color>
     <color name="md_green_500_75">#c04caf50</color>
-    <!--light greens-->
+    &lt;!&ndash;light greens&ndash;&gt;
     <array name="light_greens">
         <item>@color/md_light_green_500</item>
         <item>@color/md_light_green_50</item>
@@ -394,7 +394,7 @@
     <color name="md_light_green_500_25">#408bc34a</color>
     <color name="md_light_green_500_50">#808bc34a</color>
     <color name="md_light_green_500_75">#c88bc34a</color>
-    <!-- limes -->
+    &lt;!&ndash; limes &ndash;&gt;
     <array name="limes">
         <item>@color/md_lime_500</item>
         <item>@color/md_lime_50</item>
@@ -428,7 +428,7 @@
     <color name="md_lime_500_25">#40cddc39</color>
     <color name="md_lime_500_50">#80cddc39</color>
     <color name="md_lime_500_75">#c0cddc39</color>
-    <!--yellows -->
+    &lt;!&ndash;yellows &ndash;&gt;
     <array name="yellows">
         <item>@color/md_yellow_500</item>
         <item>@color/md_yellow_50</item>
@@ -462,7 +462,7 @@
     <color name="md_yellow_500_25">#40ffeb3b</color>
     <color name="md_yellow_500_50">#80ffeb3b</color>
     <color name="md_yellow_500_75">#c0ffeb3b</color>
-    <!-- ambers -->
+    &lt;!&ndash; ambers &ndash;&gt;
     <array name="ambers">
         <item>@color/md_amber_500</item>
         <item>@color/md_amber_50</item>
@@ -496,7 +496,7 @@
     <color name="md_amber_500_25">#40ffc107</color>
     <color name="md_amber_500_50">#80ffc107</color>
     <color name="md_amber_500_75">#c0ffc107</color>
-    <!-- oranges -->
+    &lt;!&ndash; oranges &ndash;&gt;
     <array name="oranges">
         <item>@color/md_orange_500</item>
         <item>@color/md_orange_50</item>
@@ -530,7 +530,7 @@
     <color name="md_orange_500_25">#40ff9800</color>
     <color name="md_orange_500_50">#80ff9800</color>
     <color name="md_orange_500_75">#c0ff9800</color>
-    <!-- deep oranges -->
+    &lt;!&ndash; deep oranges &ndash;&gt;
     <array name="deep_oranges">
         <item>@color/md_deep_orange_500</item>
         <item>@color/md_deep_orange_50</item>
@@ -564,7 +564,7 @@
     <color name="md_deep_orange_500_25">#40ff5722</color>
     <color name="md_deep_orange_500_50">#80ff5722</color>
     <color name="md_deep_orange_500_75">#c0ff5722</color>
-    <!-- browns -->
+    &lt;!&ndash; browns &ndash;&gt;
     <array name="browns">
         <item>@color/md_brown_500</item>
         <item>@color/md_brown_50</item>
@@ -590,7 +590,7 @@
     <color name="md_brown_500_25">#40795548</color>
     <color name="md_brown_500_50">#80795548</color>
     <color name="md_brown_500_75">#c0795548</color>
-    <!--grey-->
+    &lt;!&ndash;grey&ndash;&gt;
     <array name="greys">
         <item>@color/md_grey_500</item>
         <item>@color/md_grey_50</item>
@@ -633,7 +633,7 @@
     <color name="md_black_1000_50">#80000000</color>
     <color name="md_black_1000_75">#c0000000</color>
     <color name="md_black_1000">#000000</color>
-    <!--blue grey-->
+    &lt;!&ndash;blue grey&ndash;&gt;
     <array name="blue_greys">
         <item>@color/md_blue_grey_500</item>
         <item>@color/md_blue_grey_50</item>
@@ -659,7 +659,7 @@
     <color name="md_blue_grey_500_25">#40607d8b</color>
     <color name="md_blue_grey_500_50">#80607d8b</color>
     <color name="md_blue_grey_500_75">#c0607d8b</color>
-    <!--Texts-->
+    &lt;!&ndash;Texts&ndash;&gt;
     <array name="texts_white">
         <item>@color/md_text_white</item>
         <item>@color/md_secondary_text_icons_white</item>
@@ -680,7 +680,7 @@
     <color name="md_secondary_text_icons">#8a000000</color>
     <color name="md_disabled_hint_text">#4c000000</color>
     <color name="md_divider">#1f000000</color>
-    <!--Falcon-->
+    &lt;!&ndash;Falcon&ndash;&gt;
     <array name="falcon">
         <item>@color/md_falcon_400</item>
         <item>@color/md_falcon_500</item>
@@ -693,6 +693,6 @@
     <color name="md_falcon_500_25">#40384e77</color>
     <color name="md_falcon_500_50">#80384e77</color>
     <color name="md_falcon_500_75">#c0384e77</color>
-    <color name="md_falcon_A400_25">#40598bae</color>
+    <color name="md_falcon_A400_25">#40598bae</color>-->
 </resources>
 

@@ -11,11 +11,11 @@ public interface CurrentSessionCallback {
 
     void playSongComplete();
 
-    void currentSeekBarPosition(int progress);
+//    void currentSeekBarPosition(int progress);
 
     void playCurrent(int indexP, Radio currentAudio);
 
-    void playNext(int indexP, Radio currentAudio);
+   /* void playNext(int indexP, Radio currentAudio);
 
-    void playPrevious(int indexP, Radio currentAudio);
+    void playPrevious(int indexP, Radio currentAudio);*/
 }
