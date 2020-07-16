@@ -71,7 +71,7 @@
             android:indeterminateDrawable="@drawable/loading_animation"
             android:indeterminateDuration="1500" />
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/player_previous"
             android:layout_width="32dp"
             android:layout_height="32dp"
@@ -80,7 +80,7 @@
             android:background="@drawable/bar_selector_white"
             android:scaleType="center"
             android:src="@drawable/ic_skip_previous"
-            android:visibility="gone" />
+            android:visibility="gone" />-->
 
         <ImageView
             android:id="@+id/player_pause"
@@ -111,7 +111,6 @@
             android:layout_marginRight="8dp"
             android:background="@drawable/bar_selector_white"
             android:scaleType="center"
-            android:src="@drawable/ic_skip_next"
             android:visibility="gone" />
     </LinearLayout>
 

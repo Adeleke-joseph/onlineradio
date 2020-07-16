@@ -17,13 +17,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import com.axionteq.onlineradio.R;
 import com.axionteq.onlineradio.api.ApiInterface;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RadioActivity extends AppCompatActivity implements CurrentSessionCallback, View.OnClickListener {
 
-    private static final String TAG = Logger.makeLogTag(RadioActivity.class);
+    private static final String TAG = Logger.makeLogTag( RadioActivity.class );
     TextView tvRadio, tvPastor, tvSubtitle;
     public Call<List<Radio>> call;
     public Context context;
@@ -58,7 +58,7 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
     RelativeLayout pgPlayPauseLayout, rlMiniPlayer;
     List<Radio> radio = new ArrayList<>();
 
-    Radio radio1 = new Radio(  );
+    Radio radio1 = new Radio();
     AudioPlaybackListener playbackListener;
     ImageView btnForward, btnBackward;
 
@@ -87,7 +87,14 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
 
         playbackListener = new AudioPlaybackListener( this );
         shimmerFrameLayout.startShimmer();
-        toolbar.setTitle( "Live Radio" );
+        setSupportActionBar( toolbar );
+        if (getSupportActionBar() != null) {
+            toolbar.setTitle( "Live Radio" );
+
+            getSupportActionBar().setDisplayHomeAsUpEnabled( true );
+            getSupportActionBar().setHomeAsUpIndicator( R.drawable.ic_notification_icon_24dp );
+            getSupportActionBar().setDisplayShowHomeEnabled( true );
+        }
 
         btnBackward.setOnClickListener( this );
         btnForward.setOnClickListener( this );
@@ -122,56 +129,56 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
         call = apiInterface.getRadioType();
         disposable = ReactiveNetwork.observeInternetConnectivity()
                 .subscribeOn( Schedulers.io() )
-                .observeOn( Schedulers.newThread () )
+                .observeOn( Schedulers.newThread() )
                 .subscribe( connectivity -> {
-                    if (connectivity) {
+                            if (connectivity) {
 
-                        call.enqueue( new Callback<List<Radio>>() {
-                            @Override
-                            public void onResponse(Call<List<Radio>> call, Response<List<Radio>> response) {
+                                call.enqueue( new Callback<List<Radio>>() {
+                                    @Override
+                                    public void onResponse(Call<List<Radio>> call, Response<List<Radio>> response) {
                               /*  if (!response.isSuccessful()) {
                                     return;
                                 }*/
 
-                                radio = response.body();
+                                        radio = response.body();
 
-                                assert radio != null;
-                                for (Radio radio : RadioActivity.this.radio) {
+                                        assert radio != null;
+                                        for (Radio radio : RadioActivity.this.radio) {
 
-                                    String image, title, link, subtitle, pastor;
+                                            String image, title, link, subtitle, pastor;
 
-                                    title = radio.getRadioTitle();
-                                    image = radio.getRadioImage();
-                                    link = radio.getRadioLink();
+                                            title = radio.getRadioTitle();
+                                            image = radio.getRadioImage();
+                                            link = radio.getRadioLink();
 
-                                    Glide.with( RadioActivity.this ).load( image ).apply( options ).into( imgRadio );
-                                    pastor = radio.getRadioPastor();
-                                    subtitle = radio.getRadioSubtitle();
+                                            Glide.with( RadioActivity.this ).load( image ).apply( options ).into( imgRadio );
+                                            pastor = radio.getRadioPastor();
+                                            subtitle = radio.getRadioSubtitle();
 
-                                    tvPastor.setText( pastor );
-                                    tvSubtitle.setText( subtitle );
-                                    tvRadio.setText( title );
+                                            tvPastor.setText( pastor );
+                                            tvSubtitle.setText( subtitle );
+                                            tvRadio.setText( title );
 
-                                    shimmerFrameLayout.stopShimmer();
-                                    shimmerFrameLayout.setVisibility( View.GONE );
-                                    radio = new Radio( title, image, link, pastor, subtitle );
-                                    radio1 = radio;
-                                    playSong( radio );
+                                            shimmerFrameLayout.stopShimmer();
+                                            shimmerFrameLayout.setVisibility( View.GONE );
+                                            radio = new Radio( title, image, link, pastor, subtitle );
+                                            radio1 = radio;
+                                            playSong( radio );
 
 //                                    checkAlreadyPlaying();
-                                    configAudioStreamer();
+                                            configAudioStreamer();
 
-                                }
-                            }
+                                        }
+                                    }
 
-                            @Override
-                            public void onFailure(Call<List<Radio>> call, Throwable t) {
-                                Toast.makeText( RadioActivity.this, "Check internet connection and try again", Toast.LENGTH_LONG ).show();
-                                Logger.e( TAG, t, "Network" );
+                                    @Override
+                                    public void onFailure(Call<List<Radio>> call, Throwable t) {
+                                        Toast.makeText( RadioActivity.this, "Check internet connection and try again", Toast.LENGTH_LONG ).show();
+                                        Logger.e( TAG, t, "Network" );
+                                    }
+                                } );
                             }
-                        } );
-                    }
-                }, throwable -> Logger.i( TAG, throwable.getLocalizedMessage() )
+                        }, throwable -> Logger.i( TAG, throwable.getLocalizedMessage() )
                 );
     }
 
@@ -202,7 +209,7 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
             }
         } catch (Exception e) {
             e.printStackTrace();
-//            Logger.e( TAG, e, "onStop" );
+            Logger.e( TAG, e, "onStop" );
         }
     }
 
@@ -212,7 +219,7 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
             case R.id.btn_play:
                 if (radio1 != null) {
                     playPauseEvent( view );
-                }else {
+                } else {
                     Toast.makeText( this, "Error in link", Toast.LENGTH_SHORT ).show();
                 }
                 break;
@@ -220,12 +227,12 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
     }
 
     private void playPauseEvent(View v) {
-        if (radio1==null){
+        if (radio1 == null) {
             Toast.makeText( RadioActivity.this, "Check internet connection and try again", Toast.LENGTH_LONG ).show();
-        }else if (streamingManager.isPlaying()) {
+        } else if (streamingManager.isPlaying()) {
             streamingManager.onPause();
             ((PlayPauseView) v).Pause();
-        }else {
+        } else {
             streamingManager.onPlay( radio1 );
             ((PlayPauseView) v).Play();
         }
@@ -279,7 +286,6 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
     @Override
     public void playCurrent(int indexP, Radio currentAudio) {
         showMediaInfo( currentAudio );
-
     }
 
     private void showMediaInfo(Radio currentAudio) {
@@ -324,4 +330,6 @@ public class RadioActivity extends AppCompatActivity implements CurrentSessionCa
         super.onPause();
         safelyDispose( disposable );
     }
+
+
 }

@@ -169,13 +169,13 @@ public class AudioStreamingService extends Service implements NotificationManage
             Notification notification = null;
             if (pendingIntent != null) {
                 notification = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                        .setSmallIcon( R.drawable.player)
+                        .setSmallIcon( R.drawable.ic_notification_icon)
                         .setContentIntent(pendingIntent)
                         .setContentTitle(songName)
                         .build();
             } else {
                 notification = new NotificationCompat.Builder(getApplicationContext(), channelId)
-                        .setSmallIcon( R.drawable.player)
+                        .setSmallIcon( R.drawable.ic_notification_icon)
                         .setContentTitle(songName)
                         .build();
             }
@@ -211,11 +211,11 @@ public class AudioStreamingService extends Service implements NotificationManage
                 }
             }*/
             notification.contentView.setViewVisibility( R.id.player_progress_bar, View.GONE);
-            notification.contentView.setViewVisibility( R.id.player_next, View.VISIBLE);
-            notification.contentView.setViewVisibility( R.id.player_previous, View.VISIBLE);
+//            notification.contentView.setViewVisibility( R.id.player_next, View.GONE);
+//            notification.contentView.setViewVisibility( R.id.player_previous, View.GONE);
             if (supportBigNotifications) {
-                notification.bigContentView.setViewVisibility( R.id.player_next, View.VISIBLE);
-                notification.bigContentView.setViewVisibility( R.id.player_previous, View.VISIBLE);
+//                notification.bigContentView.setViewVisibility( R.id.player_next, View.VISIBLE);
+//                notification.bigContentView.setViewVisibility( R.id.player_previous, View.VISIBLE);
                 notification.bigContentView.setViewVisibility( R.id.player_progress_bar, View.GONE);
             }
 
@@ -240,7 +240,7 @@ public class AudioStreamingService extends Service implements NotificationManage
             if (supportBigNotifications) {
                 notification.bigContentView.setTextViewText( R.id.player_song_name, songName);
                 notification.bigContentView.setTextViewText( R.id.player_author_name, authorName);
-//                notification.bigContentView.setTextViewText(R.id.player_albumname, albumName);
+                notification.bigContentView.setTextViewText(R.id.player_albumname, albumName);
             }
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
             startForeground(5, notification);
